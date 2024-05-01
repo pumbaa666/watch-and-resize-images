@@ -18,6 +18,12 @@ DEBUG=true
 rootFolder="$1"
 tnFolder="$rootFolder/tn"
 
+imageRefRoot="$2"
+if [ -z "$imageRefRoot" ]; then
+  imageRefRoot="$rootFolder"
+fi
+tnImageRefRoot="$imageRefRoot/tn"
+
 # keeps track of all the processed images
 newPictures=""
 existingPictures=""
@@ -53,7 +59,7 @@ for pictureFileName in $(ls "$rootFolder"); do
         if $DEBUG; then
             echo "Skipping $pictureFileName because it already exists in the 'tn' folder"
         fi
-        existingPictures=$existingPictures"<a href=\"./img/$rootFolder/$pictureFileName\"><img src=\"./img/$tnFolder/$pictureFileName\" /></a>\n"
+        existingPictures=$existingPictures"<a href=\"$imageRefRoot/$pictureFileName\"><img src=\"$tnImageRefRoot/$pictureFileName\" /></a>\n"
         continue
     fi
     
@@ -67,7 +73,7 @@ for pictureFileName in $(ls "$rootFolder"); do
     if $DEBUG; then
         echo "Resizing $pictureFileName"
     fi
-    convert $rootFolder/$pictureFileName -resize 800x600 $tnFolder/$pictureFileName
+    convert $rootFolder/$pictureFileName -resize 800x600 $tnFolder/$pictureFileName # TODO size as a parameter
     
     # Check if the picture was resized successfully
     if [ ! -f "$tnFolder/$pictureFileName" ]; then
@@ -76,21 +82,22 @@ for pictureFileName in $(ls "$rootFolder"); do
     fi
     
     # Print the original and resized picture path embeded in HTML tags
-    newPictures=$newPictures"<a href=\"./img/$rootFolder/$pictureFileName\"><img src=\"./img/$tnFolder/$pictureFileName\" /></a>\n"
+    newPictures=$newPictures"<a href=\"$imageRefRoot/$pictureFileName\"><img src=\"$tnImageRefRoot/$pictureFileName\" /></a>\n"
 done
 
+output=""
 
 # Print result
 if [ -n "$newPictures" ]; then
-    echo -e "\n\nNew pictures:\n$newPictures"
+    output=$output"\n\nNew pictures:\n$newPictures"
 fi
 
 if [ -n "$existingPictures" ]; then
-    echo -e "\n\nExisting pictures:\n$existingPictures"
+    output=$output"\n\nExisting pictures:\n$existingPictures"
 fi
 
-echo -e "\nDone !"
-
+echo -e "\nDone !\n\n" $output
+echo $output > $rootFolder/resize-output.html
 
 # restore $IFS
 IFS=$SAVEIFS

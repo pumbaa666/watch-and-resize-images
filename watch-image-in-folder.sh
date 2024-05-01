@@ -24,8 +24,8 @@ if [ ! -f "resize.sh" ]; then
 fi
 
 # Check if the correct number of arguments is provided
-if [ "$#" -ne 1 ]; then
-  echo "Usage: $0 <folder_to_watch>"
+if [ "$#" -el 1 ]; then
+  echo "Usage: $0 <folder_to_watch> <image_reference_path:optional>"
   exit 1
 fi
 
@@ -46,7 +46,7 @@ while read -r file; do
 
         # Run the resize.sh script for folder containing images
         filePath=$(dirname "$file")
-        ./resize.sh "$filePath" &
+        ./resize.sh "$filePath" $2 &
     fi
   fi
 done
