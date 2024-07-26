@@ -18,11 +18,11 @@ DEBUG=true
 rootFolder="$1"
 tnFolder="$rootFolder/tn"
 
-imageRefRoot="$2"
-if [ -z "$imageRefRoot" ]; then
-  imageRefRoot="$rootFolder"
+imageAHRefRoot="$2"
+if [ -z "$imageAHRefRoot" ]; then
+  imageAHRefRoot="$rootFolder"
 fi
-tnImageRefRoot="$imageRefRoot/tn"
+tnimageAHRefRoot="$imageAHRefRoot/tn"
 
 # keeps track of all the processed images
 newPictures=""
@@ -59,7 +59,7 @@ for pictureFileName in $(ls "$rootFolder"); do
         if $DEBUG; then
             echo "Skipping $pictureFileName because it already exists in the 'tn' folder"
         fi
-        existingPictures=$existingPictures"<a href=\"$imageRefRoot/$pictureFileName\"><img src=\"$tnImageRefRoot/$pictureFileName\" /></a>\n"
+        existingPictures=$existingPictures"<a href=\"$imageAHRefRoot/$pictureFileName\"><img src=\"$tnimageAHRefRoot/$pictureFileName\" /></a>\n"
         continue
     fi
     
@@ -82,7 +82,7 @@ for pictureFileName in $(ls "$rootFolder"); do
     fi
     
     # Print the original and resized picture path embeded in HTML tags
-    newPictures=$newPictures"<a href=\"$imageRefRoot/$pictureFileName\"><img src=\"$tnImageRefRoot/$pictureFileName\" /></a>\n"
+    newPictures=$newPictures"<a href=\"$imageAHRefRoot/$pictureFileName\"><img src=\"$tnimageAHRefRoot/$pictureFileName\" /></a>\n"
 done
 
 output=""
